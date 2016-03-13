@@ -1,81 +1,93 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <?php
-
 /*
-    * Author: Kyle Bloom
-    * Date: 06/13/2014
-    * Project:
-    * File Description: Displays the Admin Contorl Panel
+    Author:      Kyle Bloom
+    Date:        06/13/2014
+	Modified:    03/11/2016
+    Description: Displays the Admin Contorl Panel
 */
-
-    try
-    {
-        $file = fopen("settings.txt","r"); //Opens the settings.txt file
-        $fileString = "";
-        while(!feof($file)) { //Reads file to  the end
-            $fileString .= fgets($file) . "\n"; 
-        }
-        fclose($file); //close file
-    }
-    catch(Exception $e) {
-        $fileString = ""; //If there is an error with reading the file
-    }
-    $fileArray = explode("\n", $fileString); //Creates an array split at the lines
+if(file_exists("settings.txt"))
+{
+	$file = fopen("settings.txt","r");
+	$fileString = "";
+	while(!feof($file)) {
+		$fileString .= fgets($file); 
+	}
+	fclose($file);
+}
+else
+{
+	// If there is an error with reading the file
+	$fileString = "";
+}
+$fileArray = explode("\n", $fileString);  // Creates an array split at the lines
 ?>
 
-<HTML>
-    <HEAD>
-        <TITLE>Admin Control Panel</TITLE>
-        <LINK HREF="default.css" TYPE="text/css" MEDIA="screen" REL="stylesheet" />
-        <SCRIPT type="text/javascript" src="index.js"></SCRIPT>
-    </HEAD>
-    <BODY>
-        <DIV ID="console">
-            <H1>Admin Control Panel</H1>
-            <FORM ACTION="settings.php" method="post">
-                <TABLE id="controlTable">
-                    <TR>
-                        <TD colspan="2">Banner Text</TD>
-                        <TD colspan="4"><textarea ID="bannerInput" TYPE="text" style="width:100%" NAME="bannertext" ><?php echo $fileArray[0] /*Inserts the bannertext into the bannerInput textarea*/ ?></textarea></TD>
-                    </TR>
-                    <TR>
-                        <TD colspan="2">Emergency Text</TD>
-                        <TD colspan="4"><textarea ID="emergencyInput" TYPE="text" style="width:100%" NAME="emergencytext" ><?php if(count($fileArray) >= 2) echo $fileArray[1]; /*Inserts the emergencytext into the emergencyInput textarea*/ ?></textarea></TD>
-                    </TR>
+<html>
+    <head>
+        <title>Admin Control Panel</title>
+        <link HREF="default.css" type="text/css" MEDIA="screen" REL="stylesheet" />
+        <script type="text/javascript" src="index.js"></script>
+    </head>
+    <body>
+        <div ID="console">
+            <h1>Admin Control Panel</h1>
+            <form ACTION="settings.php" method="post">
+                <table id="controlTable">
+                    <tr>
+                        <td colspan="2">
+							Banner Text
+						</td>
+                        <td colspan="4">
+							<textarea ID="bannerInput" type="text" style="width:100%" name="bannertext"><?php echo $fileArray[0]  // Inserts the bannertext into the bannerInput textarea ?></textarea>
+						</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+							Emergency Text
+						</td>
+                        <td colspan="4">
+							<textarea ID="emergencyInput" type="text" style="width:100%" name="emergencytext" ><?php if(count($fileArray) >= 2) echo $fileArray[1];  // Inserts the emergencytext into the emergencyInput textarea ?></textarea>
+						</td>
+                    </tr>
                     <?php
-                        for($i = 2; $i < count($fileArray)-1; $i++) //Loops through the file starting at the third line
+						// Loops through the file starting at the third line
+                        for($i = 2; $i < count($fileArray); $i++)
                         {
-                            $event = explode("," , $fileArray[$i]); //Splits the line by commas
-
-                            //Event Name
-                            echo "<TR>\n <TD>Event ";
-                            echo $i-1 . "</TD>";
-                            echo "<TD><INPUT TYPE=\"text\" NAME=\"eventtext[" . ($i-1) . "]\" style=\"width:95%\" VALUE=\"";
+							// Splits the line by commas
+                            $event = explode("," , $fileArray[$i]);
+                            // Event Name
+                            echo "<tr>\n <td>Event ";
+                            echo $i-1 . "</td>";
+                            echo "<td><input type=\"text\" name=\"eventtext[" . ($i-1) . "]\" style=\"width:95%\" value=\"";
                             echo $event[0];
-                            echo "\" /></TD>\n "; //Adds an input with the eventtext filld out with file eventtext from the line of the text file
-
-                            //Event Time
-                            echo "<TD>Time</TD>";
-                            echo "<TD><INPUT TYPE=\"time\" NAME=\"eventtime[" . ($i-1) . "]\" style=\"width:95%\" VALUE=\"";
+                            echo "\" /></td>\n ";
+                            // Event Time
+                            echo "<td>Time</td>";
+                            echo "<td><input type=\"time\" name=\"eventtime[" . ($i-1) . "]\" style=\"width:95%\" value=\"";
                             echo $event[1];
-                            echo "\" /></TD>\n ";//Adds an input with the eventtime filld out with file eventtime from the line of the text file
-
-                            //Event Room
-                            echo "<TD>Room</TD>";
-                            echo "<TD><INPUT TYPE=\"text\" NAME=\"eventroom[" . ($i-1) . "]\" style=\"width:100%\" VALUE=\"";
+                            echo "\" /></td>\n ";
+                            // Event Room
+                            echo "<td>Room</td>";
+                            echo "<td><input type=\"text\" name=\"eventroom[" . ($i-1) . "]\" style=\"width:100%\" value=\"";
                             echo $event[2];
-                            echo "\" /></TD>\n";//Adds an input with the eventroom filld out with file eventroom from the line of the text file
-
-                            echo "</TR>\n";
+                            echo "\" /></td>\n";
+                            echo "</tr>\n";
                         }
                     ?>
-                    <TR>
-                        <TD colspan="2"><INPUT TYPE="submit" NAME="submit" VALUE="Save Changes" /></TD>
-                        <TD colspan="3"/>
-                        <TD STYLE="text-align:right"><BUTTON TYPE="button" ONCLICK="addRow()" NAME="addrow" >Add Row</BUTTON></TD>
-                    </TR>
-                </TABLE>
-            </FORM>
-        </DIV>
-    </BODY>
-</HTML>
+                    <tr>
+                        <td colspan="2">
+							<input type="submit" name="submit" value="Save Changes" />
+						</td>
+                        <td colspan="3"/>
+                        <td style="text-align:right">
+							<button type="button" onclick="addRow()" name="addrow">
+								Add Row
+							</button>
+						</td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>
