@@ -11,21 +11,22 @@
 
     try
     {
-        $bannerText = trim(str_replace("\n", " ", $_POST['bannertext'])); //Removes any new lines from bannertext
-        fwrite($file, $bannerText); //Write the bannertext to the file
+        $bannerText = trim(str_replace("\n", " ", str_replace("\r", "", $_POST['bannertext']))); //Removes any new lines from bannertext
+        fwrite($file, $bannerText . chr(35)); //Write the bannertext to the file
     }
     catch(Exception $e)
     {
+		fwrite($file, $bannerText . chr(35));
     }
  
     try
     {
-        $emergencyText = PHP_EOL.trim(str_replace("\n", " ", $_POST['emergencytext'])); //Removes any new lines from emergencytext
-        fwrite($file, $emergencyText); //Writes emergencytext to file
+        $emergencyText = trim(str_replace("\n", " ", str_replace("\r", "", $_POST['emergencytext']))); //Removes any new lines from emergencytext
+        fwrite($file, $emergencyText . chr(35)); //Writes emergencytext to file
     }
     catch(Exception $e)
     {
-        fwrite($file, PHP_EOL);//If there is not emergencytext then it writes a blank line
+        fwrite($file, chr(35));//If there is not emergencytext then it writes a blank line
     }
 
     $eventText = $_POST['eventtext']; //Gets an array of event texts
@@ -35,8 +36,8 @@
     {
         if($eventText[$i] != "")// if the event text is empty then skip it. Effectively deleting it.
         {
-            $event = PHP_EOL.$eventText[$i].",".$eventTime[$i].",".$eventRoom[$i]; //Constructs a string consisting of the event text, time, and rooms sperated by commas
-            fwrite($file, $event); //Writes event to file
+            $event = $eventText[$i] . chr(36) . $eventTime[$i] . chr(36) . $eventRoom[$i]; //Constructs a string consisting of the event text, time, and rooms sperated by commas
+            fwrite($file, $event . chr(35)); //Writes event to file
         }
     }
     fflush($file); //Ensures file is written to the hard disk

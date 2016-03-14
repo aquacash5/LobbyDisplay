@@ -20,7 +20,7 @@ else
 	// If there is an error with reading the file
 	$fileString = "";
 }
-$fileArray = explode("\n", $fileString);  // Creates an array split at the lines
+$fileArray = explode(chr(35), $fileString);  // Creates an array split at the lines
 ?>
 
 <html>
@@ -55,7 +55,7 @@ $fileArray = explode("\n", $fileString);  // Creates an array split at the lines
                         for($i = 2; $i < count($fileArray); $i++)
                         {
 							// Splits the line by commas
-                            $event = explode("," , $fileArray[$i]);
+                            $event = explode(chr(36) , $fileArray[$i]);
                             // Event Name
                             echo "<tr>\n <td>Event ";
                             echo $i-1 . "</td>";
